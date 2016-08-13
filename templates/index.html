@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<div class="container">
+<div class="jumbotron">
+
+  <h1>Welcome to DES Inc.</h1>
+  <p>This is a keyword tool with which you could easily format your keywords the way you want.
+  Put your google adwords excel sheet in this tool and it will yield the result you desire.
+   Although this tool is intended for Amazon keywords formatting, you could also use it for other
+   platforms as longs as the format is right.
+  </p>
+  <p><a class="btn btn-primary btn-lg" href="{{ url_for('upload') }}" role="button">Get started</a></p>
+</div>
+    </div>
+{% endblock %}

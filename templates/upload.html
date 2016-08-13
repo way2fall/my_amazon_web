@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+{{super()}}
+<div class="container">
+    {% if filename %}
+    <h1>You just uploaded {{ filename }}</h1>
+    {% else %}
+    <h1>Upload your file below</h1>
+    {% endif %}
+    {{ wtf.quick_form(form, enctype="multipart/form-data") }}
+</div>
+
+{% endblock %}
