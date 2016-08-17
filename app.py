@@ -3,7 +3,8 @@ from flask.ext.script import Manager
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form
 from werkzeug.utils import secure_filename
-from wtforms import FileField, SubmitField
+from wtforms import FileField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired
 import os
 
 app = Flask(__name__)
@@ -23,9 +24,45 @@ class AdwordsForm(Form):
     submit = SubmitField('Submit')
 
 
+class JapanForm(Form):
+    jp_words = TextAreaField('请输入关键词：', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
 # 文件格式检查，有“.”并且是允许的格式则返回True
 def allowed_file(filename):
     return '.' in filename and filename.split('.')[-1] in ALLOWED_EXTENSIONS
+
+
+def split_words(words):
+    with open('brands.txt') as b:
+        brands = [brand.strip() for brand in b.readlines()]
+    words_chaos = list(set(words) - set(brands))
+    words_chaos.sort(key=words.index)
+    length = 0
+    partial = []
+    nested_partial = []
+    final = []
+    for i in words_chaos:
+        if length + len(i) + 1 < 100:
+            if i != words_chaos[-1]:
+                nested_partial.append(i)
+                length = length + len(i) + 1
+            else:
+                nested_partial.append(i)
+                partial.append(nested_partial)
+                length = 0
+                nested_partial = []
+        else:
+            partial.append(nested_partial)
+            nested_partial = []
+            nested_partial.append(i)
+            length = len(i) + 1
+
+    for i in partial:
+        j = ','.join(i)
+        final.append(j)
+    return final
 
 
 @app.route('/')
@@ -49,6 +86,25 @@ def upload():
             print('Invalid file!!')
         return redirect(url_for('upload'))    # POST/重定向/GET方法
     return render_template('upload.html', form=form, filename=session.get('filename'))
+
+
+@app.route('/jp', methods=('GET', 'POST'))
+def jp_remover():
+    form = JapanForm()
+    if form.validate_on_submit():
+        new_words = form.jp_words.data.split('/n')
+        keywords = []
+        for i in new_words:
+            j = i.split()
+            keywords.extend(j)
+        new_keywords = list(set(keywords))
+        new_keywords.sort(key=keywords.index)
+        # print(new_keywords)
+        new_keywords = split_words(new_keywords)
+        print(new_keywords)
+
+        return render_template('jpresult.html', new_words=new_keywords)
+    return render_template('jpform.html', form=form)
 
 
 if __name__ == '__main__':
