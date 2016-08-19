@@ -88,8 +88,8 @@ def upload():
     return render_template('upload.html', form=form, filename=session.get('filename'))
 
 
-@app.route('/jp', methods=('GET', 'POST'))
-def jp_remover():
+@app.route('/instashaper', methods=('GET', 'POST'))
+def instashaper():
     form = JapanForm()
     if form.validate_on_submit():
         new_words = form.jp_words.data.split('/n')
@@ -103,8 +103,8 @@ def jp_remover():
         new_keywords = split_words(new_keywords)
         print(new_keywords)
 
-        return render_template('jpresult.html', new_words=new_keywords)
-    return render_template('jpform.html', form=form)
+        return render_template('instashaper_result.html', new_words=new_keywords)
+    return render_template('instashaper.html', form=form)
 
 
 if __name__ == '__main__':
