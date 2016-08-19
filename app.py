@@ -36,15 +36,16 @@ def allowed_file(filename):
 
 def split_words(words):
     with open('brands.txt') as b:
-        brands = [brand.strip() for brand in b.readlines()]
-    words_chaos = list(set(words) - set(brands))
+        brands = [brand.strip().lower() for brand in b.readlines()]
+        # print(brands)
+    words_chaos = list(set([i.lower() for i in words]) - set(brands))
     words_chaos.sort(key=words.index)
     length = 0
     partial = []
     nested_partial = []
     final = []
     for i in words_chaos:
-        if length + len(i) + 1 < 100:
+        if length + len(i) + 1 < 1000:
             if i != words_chaos[-1]:
                 nested_partial.append(i)
                 length = length + len(i) + 1
@@ -101,7 +102,7 @@ def instashaper():
         new_keywords.sort(key=keywords.index)
         # print(new_keywords)
         new_keywords = split_words(new_keywords)
-        print(new_keywords)
+        # print(new_keywords)
 
         return render_template('instashaper_result.html', new_words=new_keywords)
     return render_template('instashaper.html', form=form)
