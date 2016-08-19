@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'HARD TO GUESS STRING'   # 设置密钥防止CSRF攻击
+app.config['SECRET_KEY'] = 'youcouldneverfindoutwhatthisishahaha'   # 设置密钥防止CSRF攻击
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 
@@ -36,16 +36,16 @@ def allowed_file(filename):
 
 def split_words(words):
     with open('brands.txt') as b:
-        brands = [brand.strip().lower() for brand in b.readlines()]
+        brands = [brand.strip().lower() for brand in b.readlines()]    # 将brands全部转为小写
         # print(brands)
-    words_chaos = list(set([i.lower() for i in words]) - set(brands))
-    words_chaos.sort(key=words.index)
+    words_chaos = list(set([i.lower() for i in words]) - set(brands))    # 将传入的word列表转为小写后删除brands中的品牌
+    # words_chaos.sort(key=words.index)    # 当words_chaos中包含words中没有的词时无法这样使用
     length = 0
     partial = []
     nested_partial = []
     final = []
     for i in words_chaos:
-        if length + len(i) + 1 < 1000:
+        if length + len(i) + 1 < 100:
             if i != words_chaos[-1]:
                 nested_partial.append(i)
                 length = length + len(i) + 1
