@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, flash
-from flask.ext.script import Manager
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.wtf import Form
+from flask_script import Manager    # flask.ext. 已经deprecated，现在开始使用flask_
+from flask_bootstrap import Bootstrap
+from flask_wtf import Form
 from werkzeug.utils import secure_filename
 from wtforms import FileField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired
@@ -13,7 +13,7 @@ manager = Manager(app)
 bootstrap = Bootstrap(app)
 
 UPLOAD_FOLDER = 'uploads'   # 设置上传文件的目录，同时一定要保证服务器上有该路径，因为不会自动生成
-ALLOWED_EXTENSIONS = ['txt', 'xlsx', 'xls']    # 设置允许的文件格式
+ALLOWED_EXTENSIONS = []    # 设置允许的文件格式
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER    # 配置上传文件目录
 
@@ -45,7 +45,7 @@ def split_words(words):
     nested_partial = []
     final = []
     for i in words_chaos:
-        if length + len(i) + 1 < 100:
+        if length + len(i) + 1 < 1000:
             if i != words_chaos[-1]:
                 nested_partial.append(i)
                 length = length + len(i) + 1
