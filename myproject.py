@@ -3,7 +3,7 @@ from flask_script import Manager    # flask.ext. 已经deprecated，现在开始
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
 from werkzeug.utils import secure_filename
-from wtforms import FileField, SubmitField, TextAreaField
+from wtforms import FileField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 import os
 
@@ -26,6 +26,8 @@ class AdwordsForm(Form):
 
 class JapanForm(Form):
     jp_words = TextAreaField('请输入关键词：', validators=[DataRequired()])
+    # 一定要coerce=int，否则前台会提示not a valid choice
+    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)    
     submit = SubmitField('Submit')
 
 
@@ -34,7 +36,7 @@ def allowed_file(filename):
     return '.' in filename and filename.split('.')[-1] in ALLOWED_EXTENSIONS
 
 
-def split_words(words):
+def split_words(words, limit):
     with open('brands.txt') as b:
         brands = [brand.strip().lower() for brand in b.readlines()]    # 将brands全部转为小写
         # print(brands)
@@ -45,7 +47,7 @@ def split_words(words):
     nested_partial = []
     final = []
     for i in words_chaos:
-        if length + len(i) + 1 < 1000:
+        if length + len(i) + 1 < limit:
             if i != words_chaos[-1]:
                 nested_partial.append(i)
                 length = length + len(i) + 1
@@ -92,6 +94,7 @@ def upload():
 @app.route('/instashaper', methods=('GET', 'POST'))
 def instashaper():
     form = JapanForm()
+    print(form.group_num.data)
     if form.validate_on_submit():
         new_words = form.jp_words.data.split('/n')
         keywords = []
@@ -101,9 +104,8 @@ def instashaper():
         new_keywords = list(set(keywords))
         new_keywords.sort(key=keywords.index)
         # print(new_keywords)
-        new_keywords = split_words(new_keywords)
+        new_keywords = split_words(new_keywords, form.group_num.data)
         # print(new_keywords)
-
         return render_template('instashaper_result.html', new_words=new_keywords)
     return render_template('instashaper.html', form=form)
 
