@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+{{super()}}
+<div class="container" style="word-break:break-all">
+{% for i in new_keywords %}
+    <p>{{ i }}</p><br/>
+{% endfor %}
+</div>
+
+{% endblock %}

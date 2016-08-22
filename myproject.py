@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from wtforms import FileField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 import os
+import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'youcouldneverfindoutwhatthisishahaha'   # 设置密钥防止CSRF攻击
@@ -31,9 +32,55 @@ class JapanForm(Form):
     submit = SubmitField('Submit')
 
 
+class PhraseForm(Form):
+    ad_words = TextAreaField('请输入关键词：', validators=[DataRequired()])
+    # 一定要coerce=int，否则前台会提示not a valid choice
+    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)    
+    submit = SubmitField('Submit')
+
+
 # 文件格式检查，有“.”并且是允许的格式则返回True
 def allowed_file(filename):
     return '.' in filename and filename.split('.')[-1] in ALLOWED_EXTENSIONS
+
+
+def split_phrases(phrases, limit):
+    with open('brands.txt', encoding='utf-8') as b:
+        brands = [brand.strip().lower() for brand in b.readlines()]
+    phrases = [i.strip().lower() for i in phrases]
+    phrases_li = []
+    for i in phrases:
+        phrase_list = i.split(' ')
+        new_phrase = ' '.join([i for i in phrase_list if i not in brands])
+        # print('this is new phrase:', new_phrase)
+        phrases_li.append(new_phrase)
+        # print(phrase_list)
+    # return phrases_li
+    length = 0
+    inner_group = []
+    outer_group = []
+    final = []
+    for i in phrases_li:
+        if length + len(i) + 1 < limit:
+            if i != phrases_li[-1]:
+                inner_group.append(i)
+                length = length + len(i) + 1
+            else:
+                inner_group.append(i)
+                outer_group.append(inner_group)
+                length = 0
+                inner_group = []
+        else:
+            outer_group.append(inner_group)
+            inner_group = []
+            inner_group.append(i)
+            length = len(i) + 1
+
+    for j in outer_group:
+        k = ' '.join(j)
+        final.append(k)
+        
+    return final
 
 
 def split_words(words, limit):
@@ -109,6 +156,20 @@ def instashaper():
         # print(new_keywords)
         return render_template('instashaper_result.html', new_words=new_keywords)
     return render_template('instashaper.html', form=form)
+
+
+@app.route('/phraseshaper', methods=('GET', 'POST'))
+def phraseshaper():
+    form = PhraseForm()
+    if form.validate_on_submit():
+        new_words = form.ad_words.data.split('\n')
+        random.shuffle(new_words)
+        new_keywords = split_phrases(new_words, form.group_num.data)
+
+        return render_template('phraseshaper_result.html', new_keywords=new_keywords)
+
+    return render_template('phraseshaper.html', form=form)
+
 
 
 if __name__ == '__main__':
