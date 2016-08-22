@@ -28,14 +28,14 @@ class AdwordsForm(Form):
 class JapanForm(Form):
     jp_words = TextAreaField('请输入关键词：', validators=[DataRequired()])
     # 一定要coerce=int，否则前台会提示not a valid choice
-    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)    
+    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)
     submit = SubmitField('Submit')
 
 
 class PhraseForm(Form):
     ad_words = TextAreaField('请输入关键词：', validators=[DataRequired()])
     # 一定要coerce=int，否则前台会提示not a valid choice
-    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)    
+    group_num = SelectField('每组字符数', choices = [(1000, 1000), (750,750), (500, 500), (250, 250), (100, 100), (50, 50)], coerce=int)
     submit = SubmitField('Submit')
 
 
@@ -56,30 +56,42 @@ def split_phrases(phrases, limit):
         phrases_li.append(new_phrase)
         # print(phrase_list)
     # return phrases_li
+    # print(phrases_li)
     length = 0
     inner_group = []
     outer_group = []
     final = []
     for i in phrases_li:
-        if length + len(i) + 1 < limit:
+        if length + len(i) < limit:
+            # print("AAA")
             if i != phrases_li[-1]:
+                # print("CCC")
                 inner_group.append(i)
+                # print(i)
                 length = length + len(i) + 1
             else:
+                # print('DDD')
                 inner_group.append(i)
                 outer_group.append(inner_group)
                 length = 0
                 inner_group = []
-        else:
+
+        elif i != phrases_li[-1]:
+            # print("BBB")
             outer_group.append(inner_group)
             inner_group = []
             inner_group.append(i)
             length = len(i) + 1
+        else:
+            outer_group.append(inner_group)
+            inner_group = []
+            inner_group.append(i)
+            outer_group.append(inner_group)
 
     for j in outer_group:
-        k = ' '.join(j)
+        k = ','.join(j)
         final.append(k)
-        
+
     return final
 
 
@@ -104,11 +116,16 @@ def split_words(words, limit):
                 partial.append(nested_partial)
                 length = 0
                 nested_partial = []
-        else:
+        elif i != words_chaos[-1]:
             partial.append(nested_partial)
             nested_partial = []
             nested_partial.append(i)
             length = len(i) + 1
+        else:
+            partial.append(nested_partial)
+            nested_partial = []
+            nested_partial.append(i)
+            partial.append(nested_partial)
 
     for i in partial:
         j = ' '.join(i)
