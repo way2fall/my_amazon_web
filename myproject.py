@@ -37,7 +37,7 @@ def allowed_file(filename):
 
 
 def split_words(words, limit):
-    with open('brands.txt') as b:
+    with open('brands.txt', encoding='utf-8') as b:
         brands = [brand.strip().lower() for brand in b.readlines()]    # 将brands全部转为小写
         # print(brands)
     words_chaos = list(set([i.lower() for i in words]) - set(brands))    # 将传入的word列表转为小写后删除brands中的品牌
@@ -63,7 +63,7 @@ def split_words(words, limit):
             length = len(i) + 1
 
     for i in partial:
-        j = ','.join(i)
+        j = ' '.join(i)
         final.append(j)
     return final
 
