@@ -41,7 +41,8 @@ def split_words(words, limit):
         brands = [brand.strip().lower() for brand in b.readlines()]    # 将brands全部转为小写
         # print(brands)
     words_chaos = list(set([i.lower() for i in words]) - set(brands))    # 将传入的word列表转为小写后删除brands中的品牌
-    # words_chaos.sort(key=words.index)    # 当words_chaos中包含words中没有的词时无法这样使用
+    words = [i.strip().lower() for i in words]
+    words_chaos.sort(key=words.index)    # 当words_chaos中包含words中没有的词时无法这样使用
     length = 0
     partial = []
     nested_partial = []
