@@ -161,7 +161,8 @@ def instashaper():
     form = JapanForm()
     print(form.group_num.data)
     if form.validate_on_submit():
-        new_words = form.jp_words.data.split('/n')
+        new_words = form.jp_words.data.split('\n')
+        random.shuffle(new_words)
         keywords = []
         for i in new_words:
             j = i.split()
