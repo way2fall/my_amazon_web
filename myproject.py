@@ -39,6 +39,11 @@ class PhraseForm(Form):
     submit = SubmitField('Submit')
 
 
+class BrandSubmit(Form):
+    brand_file = TextAreaField('请输入品牌名：', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
 # 文件格式检查，有“.”并且是允许的格式则返回True
 def allowed_file(filename):
     return '.' in filename and filename.split('.')[-1] in ALLOWED_EXTENSIONS
@@ -188,6 +193,15 @@ def phraseshaper():
 
     return render_template('phraseshaper.html', form=form)
 
+
+@app.route('/brandsubmitly998899', methods=('GET','POST'))
+def brands_sub():
+    form = BrandSubmit()
+    if form.validate_on_submit():
+        with open('brands.txt', 'a') as br:
+            br.write(form.brand_file.data+'\n')
+        return render_template('brand_result.html')
+    return render_template('brand_submit.html', form=form)
 
 
 if __name__ == '__main__':
