@@ -5,6 +5,7 @@ from . import main
 from ..words_process import split_words, split_phrases, allowed_file
 from werkzeug.utils import secure_filename
 import os
+from flask_login import login_required
 
 
 @main.route('/')
@@ -13,6 +14,7 @@ def index():
 
 
 @main.route('/upload', methods=('GET', 'POST'))
+@login_required
 def upload():
     form = AdwordsForm()    # 实例化一个表单
     if form.validate_on_submit():
