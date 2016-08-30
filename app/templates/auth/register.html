@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Des's Inn - Register{% endblock %}
+{% block content %}
+{{super()}}
+
+<div class="container">
+    {{ wtf.quick_form(form) }}
+</div>
+
+{% endblock %}
