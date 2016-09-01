@@ -18,16 +18,15 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ url_for('main.index') }}">DES Inc.</a>
+      <a class="navbar-brand" href="{{ url_for('main.index') }}">D</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="{{url_for('main.upload')}}">Adwords Shaper</a></li>
         <li><a href="{{url_for('main.instashaper')}}">Instashaper</a></li>
         <li><a href="{{url_for('main.phraseshaper')}}">Ad Phrases</a></li>
-        <li><a href="#">Amazon Top Reviewers</a></li>
+        <li><a href="{{url_for('main.upload')}}">Adwords Shaper</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated %}
