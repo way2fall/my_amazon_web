@@ -6,13 +6,13 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     ALLOWED_EXTENSIONS = []
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    MAIL_SERVER = 'smtp.163.com'
-    MAIL_PORT = 25
-    # MAIL_USE_SSL = True
+    MAIL_SERVER = 'smtp.qq.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[heworkshiswork]'
-    FLASKY_MAIL_SENDER = 'kittrock@163.com'
+    FLASKY_MAIL_SENDER = '250851671@qq.com'
     FLASKY_ADMIN = os.environ.get('Des_Admin')
 
     @staticmethod
