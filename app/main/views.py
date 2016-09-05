@@ -33,6 +33,7 @@ def upload():
 
 
 @main.route('/instashaper', methods=('GET', 'POST'))
+@login_required
 def instashaper():
     form = JapanForm()
     print(form.group_num.data)
@@ -53,6 +54,7 @@ def instashaper():
 
 
 @main.route('/phraseshaper', methods=('GET', 'POST'))
+@login_required
 def phraseshaper():
     form = PhraseForm()
     if form.validate_on_submit():
