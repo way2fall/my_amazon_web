@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Keywords Hatch - Change Password{% endblock %}
+{% block title %}Keywords Hatch - Change Email Address{% endblock %}
 
 {% block content %}
-{{super()}}
+{{ super() }}
 <div class="container">
-    <h1>Change Your Password</h1>
-
+    <h1>Change Your Email Address</h1>
+</div>
 <div class="container">
     {{ wtf.quick_form(form) }}
-</div>
 </div>
 {% endblock %}
